@@ -3,6 +3,8 @@
 /**
  * TODO: Check if we sometimes @-mention people we don't follow.
  *       If so, we need to use the full webfinger @user@example.org
+ *       We may have a candidate here: http://sn.chromic.org/notice/replyall?inreplyto=886970
+ *       w/ modemjunkie@quitter.is (@mcscx@quitter.se repeated it, so it show up in the convo)
  */
 
 if (!defined('GNUSOCIAL')) {
@@ -28,21 +30,29 @@ class ReplyallAction extends NewnoticeAction
             throw new ClientException(_m('Notice doesn\'t exist'), 404);
         }
 
+        // Get the users we should mention
         $recipients = $this->getRecipients($notice);
 
         // Ajax
-        // FIXME: This seems like a strange location this that
+        // FIXME: This seems like a strange location for that
         if ($this->boolean('ajax')) {
             header('Content-Type: application/json; charset=utf-8');
             print json_encode(['mentions' => $recipients]);
             return;
         }
 
+        // Pre-fill the textarea
         $this->formOpts['content'] = implode(" ", $recipients);
 
         return true;
     }
 
+    /**
+     * Given a Notice, return all the relevant @-mentions
+     *
+     * @param  Notice $notice The notice we're Replying-all to
+     * @return Array A list of @-mention strings (e.g.: ["@chimo", "@mmn"])
+     */
     function getRecipients($notice)
     {
         $recipients = array();
@@ -56,15 +66,11 @@ class ReplyallAction extends NewnoticeAction
             // Try to get all notices from it
             if ($conv->find(true)) {
                 $notices = $conv->getNotices()->fetchAll();
-            } else {
-                // If we fail, fallback to only this notice
-                $notices[] = $notice;
-
             }
-        } else {
-            // If we don't have a conversation, just use this notice
-            $notices[] = $notice;
         }
+
+        // Include the original notice
+        $notices[] = $notice;
 
         foreach($notices as $notice) {
             $profile = $notice->getProfile();
