@@ -4,8 +4,6 @@ if (!defined('GNUSOCIAL')) {
     exit(1);
 }
 
-require_once INSTALLDIR . '/plugins/TranslateNotice/lib/BingTranslator.php';
-
 class ReplyAllPlugin extends Plugin
 {
     const VERSION = '0.0.1';
