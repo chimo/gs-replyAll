@@ -50,7 +50,7 @@ class ReplyAllPlugin extends Plugin
 
     function onPluginVersion(&$versions)
     {
-        $versions[] = array('name' => 'TranslateNotice',
+        $versions[] = array('name' => 'ReplyAll',
                             'version' => self::VERSION,
                             'author' => 'chimo',
                             'homepage' => 'https://github.com/chimo/gs-replyAll',

@@ -48,7 +48,7 @@ class ReplyallAction extends NewnoticeAction
     }
 
     /**
-     * Given a Notice, return all the relevant @-mentions
+     * Given a Notice, return @-mentions for every user involved in the Conversation
      *
      * @param  Notice $notice The notice we're Replying-all to
      * @return Array A list of @-mention strings (e.g.: ["@chimo", "@mmn"])
@@ -72,13 +72,23 @@ class ReplyallAction extends NewnoticeAction
         // Include the original notice
         $notices[] = $notice;
 
+        // For each notice in the Conversation
         foreach($notices as $notice) {
-            $profile = $notice->getProfile();
+            // Add notice author to reply-all list
+            $author = $notice->getProfile();
+            $recipients[] = '@' . $author->getNickname();
 
-            $recipients[] = '@' . $profile->getNickname();
+            // Get users mentioned in the notice
+            $mentions = $notice->getReplies();
+
+            // Add mentioned users to the reply-all list
+            foreach($mentions as $profileID) {
+                $profile = Profile::getKV('id', $profileID);
+                $recipients[] = '@' . $profile->getNickname();
+            }
         }
 
-        // De-dupe
+        // De-dupe recipient list
         $recipients = array_values(array_unique($recipients));
 
         return $recipients;
