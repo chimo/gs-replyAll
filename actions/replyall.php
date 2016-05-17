@@ -13,7 +13,7 @@ if (!defined('GNUSOCIAL')) {
 
 class ReplyallAction extends NewnoticeAction
 {
-    function prepare($args)
+    function prepare(array $args = array())
     {
         parent::prepare($args);
 
