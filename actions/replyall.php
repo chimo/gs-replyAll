@@ -91,6 +91,14 @@ class ReplyallAction extends NewnoticeAction
         // De-dupe recipient list
         $recipients = array_values(array_unique($recipients));
 
+        // Remove ourselves from list
+        $user = common_current_user();
+        $key = array_search('@' . $user->nickname, $recipients);
+
+        if ($key !== false) {
+            array_splice($recipients, $key, 1);
+        }
+
         return $recipients;
     }
 }

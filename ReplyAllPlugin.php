@@ -6,7 +6,7 @@ if (!defined('GNUSOCIAL')) {
 
 class ReplyAllPlugin extends Plugin
 {
-    const VERSION = '0.0.1';
+    const VERSION = '0.0.2';
 
     function onRouterInitialized($m) {
         $m->connect(
